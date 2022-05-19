@@ -1,0 +1,11 @@
+noinline
+int[.] generate ()
+{
+  return with {} : genarray( [10000], 42);
+}
+
+int main()
+{
+  a = generate();
+  return _sel_VxA_( [42], a);
+}
