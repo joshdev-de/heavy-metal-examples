@@ -6,3 +6,6 @@
 
 #include "Foundation/Foundation.hpp"
 #include "Metal/Metal.hpp"
+#include "metal-wrapper.h"
+
+MTL::Size toMTLSize(const mtl_size size_struct);

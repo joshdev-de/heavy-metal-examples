@@ -1,5 +1,4 @@
 #include "metal-wrapper.hpp"
-#include "metal-wrapper.h"
 #include <iostream>
 
 extern "C" device_ptr getDefaultDevice()
@@ -45,7 +44,73 @@ extern "C" cmd_buffer_ptr getCommandBuffer(cmd_queue_ptr untyped_cmd_queue_ptr)
     return cmdBuffer;
 }
 
+extern "C" void commit(cmd_buffer_ptr untyped_cmd_buffer_ptr)
+{
+    MTL::CommandBuffer *cmd_buffer = static_cast<MTL::CommandBuffer*>(untyped_cmd_buffer_ptr);
 
+    cmd_buffer->commit();
+}
+
+extern "C" void waitUntilCompleted(cmd_buffer_ptr untyped_cmd_buffer_ptr)
+{
+    MTL::CommandBuffer *cmd_buffer = static_cast<MTL::CommandBuffer*>(untyped_cmd_buffer_ptr);
+
+    cmd_buffer->waitUntilCompleted();
+}
+
+extern "C" comp_cmd_enc_ptr getComputeCmdEncoder(cmd_buffer_ptr untyped_cmd_buffer_ptr)
+{
+    MTL::CommandBuffer *cmd_buffer = static_cast<MTL::CommandBuffer*>(untyped_cmd_buffer_ptr);
+
+    MTL::ComputeCommandEncoder *cmd_encoder = cmd_buffer->computeCommandEncoder();
+    return cmd_encoder;
+}
+
+extern "C" void setComputePipelineState(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr, pso_ptr untyped_pso_ptr)
+{
+    MTL::ComputeCommandEncoder *cmd_encoder = static_cast<MTL::ComputeCommandEncoder*>(untyped_comp_cmd_enc_ptr);
+    MTL::ComputePipelineState *pso = static_cast<MTL::ComputePipelineState*>(untyped_pso_ptr);
+
+    cmd_encoder->setComputePipelineState(pso);
+}
+
+extern "C" void setBuffer(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr, device_buffer_ptr untyped_device_buffer_ptr, const unsigned int offset, const unsigned int index)
+{
+    MTL::ComputeCommandEncoder *cmd_encoder = static_cast<MTL::ComputeCommandEncoder*>(untyped_comp_cmd_enc_ptr);
+    MTL::Buffer *buffer = static_cast<MTL::Buffer*>(untyped_device_buffer_ptr);
+
+    cmd_encoder->setBuffer(buffer, offset, index);
+}
+
+extern "C" void dispatchThreads(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr, mtl_size gridSize, mtl_size threadGroupSize)
+{
+    MTL::ComputeCommandEncoder *cmd_encoder = static_cast<MTL::ComputeCommandEncoder*>(untyped_comp_cmd_enc_ptr);
+
+    cmd_encoder->dispatchThreads(toMTLSize(gridSize), toMTLSize(threadGroupSize));
+}
+
+extern "C" void endEncoding(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr)
+{
+    MTL::ComputeCommandEncoder *cmd_encoder = static_cast<MTL::ComputeCommandEncoder*>(untyped_comp_cmd_enc_ptr);
+
+    cmd_encoder->endEncoding();
+}
+
+extern "C" device_buffer_ptr newDeviceBuffer(device_ptr untyped_device_ptr, const unsigned int bufferSize)
+{
+    MTL::Device *device = static_cast<MTL::Device*>(untyped_device_ptr);
+
+    void* buffer = device->newBuffer(bufferSize, MTL::ResourceStorageModeShared);
+    return buffer;
+}
+
+extern "C" void* bufferContents(device_buffer_ptr untyped_device_buffer_ptr)
+{
+    MTL::Buffer *buffer = static_cast<MTL::Buffer*>(untyped_device_buffer_ptr);
+
+    return buffer->contents();
+}
+ 
 extern "C" pso_ptr psoWithFunction(device_ptr untyped_device_ptr, library_ptr untyped_library_ptr, char* funName)
 {
     MTL::Device *device = static_cast<MTL::Device*>(untyped_device_ptr);
@@ -75,6 +140,18 @@ extern "C" pso_ptr psoWithFunction(device_ptr untyped_device_ptr, library_ptr un
     }
 
     return pso;
+}
+
+MTL::Size toMTLSize(const mtl_size size_struct)
+{
+    return MTL::Size::Make(size_struct.width, size_struct.height, size_struct.depth);
+}
+
+extern "C" unsigned int maxTotalThreadsPerThreadgroup(pso_ptr untyped_pso_ptr)
+{
+    MTL::ComputePipelineState *pso = static_cast<MTL::ComputePipelineState*>(untyped_pso_ptr);
+
+    return pso->maxTotalThreadsPerThreadgroup();
 }
 
 extern "C" int dummyDevicePtrInput(device_ptr untyped_device_ptr) {
