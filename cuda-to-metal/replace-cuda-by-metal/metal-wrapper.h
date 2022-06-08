@@ -21,8 +21,7 @@
 
 
     EXTERNC device_ptr getDefaultDevice();
-    EXTERNC device_buffer_ptr newDeviceBuffer(device_ptr untyped_device_ptr,
-                                              const unsigned int bufferSize);
+    EXTERNC void* newDeviceBuffer(device_ptr untyped_device_ptr, const unsigned int bufferSize);
     EXTERNC void* bufferContents(device_buffer_ptr untyped_device_buffer_ptr);
     EXTERNC library_ptr loadDefaultLibrary(device_ptr);
     EXTERNC cmd_queue_ptr getCommandQueue(device_ptr);
@@ -32,15 +31,9 @@
     EXTERNC unsigned int maxTotalThreadsPerThreadgroup(pso_ptr untyped_pso_ptr);
     
     EXTERNC comp_cmd_enc_ptr getComputeCmdEncoder(cmd_buffer_ptr untyped_cmd_buffer_ptr);
-    EXTERNC void setComputePipelineState(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr,
-                                         pso_ptr untyped_pso_ptr);
-    EXTERNC void setBuffer(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr,
-                           void *untyped_buffer,
-                           const unsigned int offset,
-                           const unsigned int index);
-    EXTERNC void dispatchThreads(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr,
-                                 mtl_size gridSize,
-                                 mtl_size threadGroupSize);
+    EXTERNC void setComputePipelineState(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr, pso_ptr untyped_pso_ptr);
+    EXTERNC void setBuffer(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr, void *untyped_buffer, const unsigned int offset, const unsigned int index);
+    EXTERNC void dispatchThreads(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr, mtl_size gridSize, mtl_size threadGroupSize);
     EXTERNC void endEncoding(comp_cmd_enc_ptr untyped_comp_cmd_enc_ptr);
 
     EXTERNC void commit(cmd_buffer_ptr untyped_cmd_buffer_ptr);

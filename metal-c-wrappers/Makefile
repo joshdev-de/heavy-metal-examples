@@ -1,6 +1,6 @@
 CC := clang
 CXX := clang++
-CFLAGS += -O2
+CFLAGS += -O2 -Wall
 CXXFLAGS += -std=c++17 -I./metal-cpp -O2
 LDFLAGS += -framework Metal -framework Foundation -framework MetalKit
 

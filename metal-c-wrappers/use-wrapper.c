@@ -15,13 +15,11 @@ int main()
     pso_ptr pso_gen42 = psoWithFunction(device, library, "gen42");
     pso_ptr pso_addOne = psoWithFunction(device, library, "addOne");
 
-    cmd_buffer_ptr cmd_buffer;
-
     device_buffer_ptr device_buffer = newDeviceBuffer(device, sizeof(float) * ARRAY_SIZE);
 
     // initialize arry with 42.0
 
-    cmd_buffer = getCommandBuffer(cmd_queue);
+    cmd_buffer_ptr cmd_buffer = getCommandBuffer(cmd_queue);
     comp_cmd_enc_ptr cmd_enc = getComputeCmdEncoder(cmd_buffer);
     
     setComputePipelineState(cmd_enc, pso_gen42);
